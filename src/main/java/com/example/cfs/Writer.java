@@ -32,10 +32,6 @@ public class Writer {
 			conf.set("fs.default.name", "cfs://localhost:9160/");
 			cfs = FileSystem.get(conf);
 
-//			o = cfs.create(new Path("testfile.txt"));
-//			o.write(content.getBytes());
-//			o.flush();
-			
 			BufferedWriter br=new BufferedWriter(new OutputStreamWriter(cfs.append(new Path("/testfile.txt"))));
 			int count = 50;
 			while(count-- > 0){
