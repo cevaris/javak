@@ -36,7 +36,7 @@ public class Writer {
 //			o.write(content.getBytes());
 //			o.flush();
 			
-			BufferedWriter br=new BufferedWriter(new OutputStreamWriter(cfs.create(new Path("testfile.txt"),true)));
+			BufferedWriter br=new BufferedWriter(new OutputStreamWriter(cfs.append(new Path("/testfile.txt"))));
 			int count = 50;
 			while(count-- > 0){
 				String line = UUID.randomUUID().toString();
