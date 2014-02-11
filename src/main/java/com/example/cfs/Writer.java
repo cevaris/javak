@@ -33,13 +33,13 @@ public class Writer {
 //			System.out.println(conf.getRaw("fs.default.name"));
 //			System.out.println(cfs.g);
 //
-//			o = cfs.create(new Path("/testfile.txt"), true);
-//			o.write(content.getBytes());
-//			o.flush();
+			o = cfs.create(new Path("testfile.txt"));
+			o.write(content.getBytes());
+			o.flush();
 			
 			FileStatus[] files = cfs.listStatus(new Path("cfs://localhost:9160/"));
 			for(FileStatus file: files){
-				System.out.println(file.getPath().getName());
+				System.out.println(file.getPath().getName() + " "+ file.getLen() + " "+ file.isDir());
 			}
 
 		} catch (Exception err) {
