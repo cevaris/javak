@@ -1,6 +1,10 @@
 package com.example.cfs;
 
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
 import java.net.URI;
+import java.util.UUID;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.*;
 import org.apache.hadoop.security.UserGroupInformation;
@@ -24,18 +28,22 @@ public class Writer {
 			Configuration conf = new Configuration();
 			conf.addResource(new Path("/usr/local/dse/resources/hadoop/conf/core-site.xml"));
 
-//			UserGroupInformation.createUserForTesting("root", new String[] { "supergroup" });
-//			UserGroupInformation.setConfiguration(conf);
 
 			conf.set("fs.default.name", "cfs://localhost:9160/");
 			cfs = FileSystem.get(conf);
-//			cfs.initialize(URI.create("cfs://localhost:9160"), conf);
-//			System.out.println(conf.getRaw("fs.default.name"));
-//			System.out.println(cfs.g);
-//
-			o = cfs.create(new Path("testfile.txt"));
-			o.write(content.getBytes());
-			o.flush();
+
+//			o = cfs.create(new Path("testfile.txt"));
+//			o.write(content.getBytes());
+//			o.flush();
+			
+			BufferedWriter br=new BufferedWriter(new OutputStreamWriter(cfs.create(new Path("testfile.txt"),true)));
+			int count = 50;
+			while(count-- > 0){
+				String line = UUID.randomUUID().toString();
+				System.out.println(line);
+				br.write(line+"\n");
+			}
+			br.close();
 			
 			FileStatus[] files = cfs.listStatus(new Path("cfs://localhost:9160/"));
 			for(FileStatus file: files){
