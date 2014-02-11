@@ -14,7 +14,7 @@ public class Writer {
 	public static void main(String[] args) throws Exception {
 
 		FSDataOutputStream o = null;
-		CassandraFileSystem cfs = null;
+		FileSystem cfs = null;
 		String content = "some text content..";
 
 		try {
@@ -22,17 +22,25 @@ public class Writer {
 			System.setProperty("dse.config", ClassLoader.getSystemResource("conf/dse.yaml").toString());
 
 			Configuration conf = new Configuration();
-			conf.addResource(new Path("conf/core-site.xml"));
+			conf.addResource(new Path("/usr/local/dse/resources/hadoop/conf/core-site.xml"));
 
-			UserGroupInformation.createUserForTesting("unixuserid", new String[] { "usergroupname" });
-			UserGroupInformation.setConfiguration(conf);
+//			UserGroupInformation.createUserForTesting("root", new String[] { "supergroup" });
+//			UserGroupInformation.setConfiguration(conf);
 
-			cfs = new CassandraFileSystem();
-			cfs.initialize(URI.create("cfs://localhost:9160/"), conf);
-
-			o = cfs.create(new Path("/test/testfile.txt"), true);
-			o.write(content.getBytes());
-			o.flush();
+			conf.set("fs.default.name", "cfs://localhost:9160/");
+			cfs = FileSystem.get(conf);
+//			cfs.initialize(URI.create("cfs://localhost:9160"), conf);
+//			System.out.println(conf.getRaw("fs.default.name"));
+//			System.out.println(cfs.g);
+//
+//			o = cfs.create(new Path("/testfile.txt"), true);
+//			o.write(content.getBytes());
+//			o.flush();
+			
+			FileStatus[] files = cfs.listStatus(new Path("cfs://localhost:9160/"));
+			for(FileStatus file: files){
+				System.out.println(file.getPath().getName());
+			}
 
 		} catch (Exception err) {
 			System.out.println("Error: " + err.toString() +"\n");
