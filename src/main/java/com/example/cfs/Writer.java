@@ -2,24 +2,17 @@ package com.example.cfs;
 
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
-import java.net.URI;
 import java.util.UUID;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.*;
-import org.apache.hadoop.security.UserGroupInformation;
-
-import com.datastax.bdp.hadoop.cfs.CassandraFileSystem;
 
 public class Writer {
 	
-	// Open ports
-
 	public static void main(String[] args) throws Exception {
 
 		FSDataOutputStream o = null;
 		FileSystem cfs = null;
-		String content = "some text content..";
 
 		try {
 			System.setProperty("cassandra.config", ClassLoader.getSystemResource("conf/cassandra.yaml").toString());
