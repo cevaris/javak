@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import com.example.cfs.CFSWriter;
+
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
@@ -15,11 +17,13 @@ import kafka.message.Message;
 public class AnalyticsConsumer extends Thread {
 	private final ConsumerConnector consumer;
 	private final String topic;
+	private final CFSWriter writer;
 
 	public AnalyticsConsumer() {
 		this.consumer = kafka.consumer.Consumer.createJavaConsumerConnector(createConsumerConfig());
 //		this.topic = KafakTopics.COMPLETE_ANALYTICS.name().toLowerCase();
 		this.topic = KafakTopics.EVENTS.name().toLowerCase();
+		this.writer = new CFSWriter();
 	}
 
 	private static ConsumerConfig createConsumerConfig() {
@@ -43,7 +47,10 @@ public class AnalyticsConsumer extends Thread {
 		KafkaStream<Message> stream = consumerMap.get(topic).get(0);
 		ConsumerIterator<Message> it = stream.iterator();
 		
-		while (it.hasNext())
-			System.out.println(KafkaUtils.getMessage(it.next().message()));
+		while (it.hasNext()){
+			this.writer.append(KafkaUtils.getMessage(it.next().message()));
+		}
+//			System.out.println(KafkaUtils.getMessage(it.next().message()));
+			
 	}
 }

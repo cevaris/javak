@@ -18,6 +18,7 @@ public class KafkaTestExample {
 
 	    AnalyticsConsumer consumerThread = new AnalyticsConsumer();
 	    consumerThread.start();
+		
 	}
 
 }
